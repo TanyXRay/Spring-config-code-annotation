@@ -1,34 +1,26 @@
 package ru.home.chernyadieva.music.player;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import ru.home.chernyadieva.music.genre.Genre;
 import ru.home.chernyadieva.music.interface_music.Music;
 
+import java.util.List;
 import java.util.Random;
 
-@Component
 public class MusicPlayer {
-    private Music classicMusic;
-    private Music rockMusic;
+    private List<Music> musicListGenre;
     private Random random = new Random();
 
-    @Autowired
-    public MusicPlayer(@Qualifier("classicMusic") Music classicMusic,
-                       @Qualifier("rockMusic") Music rockMusic) {
-        this.classicMusic = classicMusic;
-        this.rockMusic = rockMusic;
+    public MusicPlayer(@Qualifier("musicList") List<Music> musicListGenre) {
+        this.musicListGenre = musicListGenre;
     }
 
-    public String playMusic(Enum enumClass) {
-        String randomElement;
-        if (enumClass == Genre.ROCK) {
-            randomElement = rockMusic.getSong().get(random.nextInt(rockMusic.getSong().size()));
-            return "Playing rock song: " + randomElement;
-        } else {
-            randomElement = classicMusic.getSong().get(random.nextInt(classicMusic.getSong().size()));
-            return "Playing classic song: " + randomElement;
-        }
+    public String playMusic() {
+        int randomCountGenre = random.nextInt(musicListGenre.size());
+        Music randomMusicGenre = musicListGenre.get(randomCountGenre);
+
+        int randomCountSong = random.nextInt(randomMusicGenre.getSong().size());
+        String randomMusicSong = randomMusicGenre.getSong().get(randomCountSong);
+
+        return "Playing song: " + randomMusicSong;
     }
 }
